@@ -1,0 +1,105 @@
+{
+  "config": {
+    "abort": {
+      "already_configured": "[%key:common::config_flow::abort::already_configured_device%]"
+    },
+    "error": {
+      "cannot_connect": "[%key:common::config_flow::error::cannot_connect%]",
+      "invalid_auth": "[%key:common::config_flow::error::invalid_auth%]",
+      "unknown": "[%key:common::config_flow::error::unknown%]"
+    },
+    "step": {
+      "user": {
+        "title": "Connect to i-Lex",
+        "description": "Enter your i-Lex Connect credentials to connect your Syr Oceanic water softener.",
+        "data": {
+          "username": "[%key:common::config_flow::data::username%]",
+          "password": "[%key:common::config_flow::data::password%]"
+        },
+        "data_description": {
+          "username": "Your i-Lex Connect account username",
+          "password": "Your i-Lex Connect account password"
+        }
+      },
+      "reauth_confirm": {
+        "title": "Reauthenticate i-Lex Connect",
+        "description": "Your session has expired. Please enter your password for {username} to reconnect.",
+        "data": {
+          "password": "[%key:common::config_flow::data::password%]"
+        }
+      }
+    }
+  },
+  "entity": {
+    "binary_sensor": {
+      "alarm_active": {
+        "name": "Alarm active"
+      },
+      "connected": {
+        "name": "Connected"
+      },
+      "regeneration_active": {
+        "name": "Regeneration active"
+      },
+      "network_connected": {
+        "name": "Network connected"
+      }
+    },
+    "sensor": {
+      "current_flow": {
+        "name": "Current flow"
+      },
+      "days_remaining": {
+        "name": "Days remaining"
+      },
+      "remaining_capacity": {
+        "name": "Remaining capacity"
+      },
+      "water_pressure": {
+        "name": "Water pressure"
+      },
+      "water_used_today": {
+        "name": "Water used today"
+      },
+      "water_used_yesterday": {
+        "name": "Water used yesterday"
+      },
+      "water_used_current_week": {
+        "name": "Water used this week"
+      },
+      "water_used_last_week": {
+        "name": "Water used last week"
+      },
+      "water_used_current_month": {
+        "name": "Water used this month"
+      },
+      "water_used_last_month": {
+        "name": "Water used last month"
+      },
+      "last_regeneration": {
+        "name": "Last regeneration"
+      },
+      "normal_regenerations": {
+        "name": "Normal regenerations"
+      },
+      "service_regenerations": {
+        "name": "Service regenerations"
+      },
+      "incomplete_regenerations": {
+        "name": "Incomplete regenerations"
+      },
+      "total_usage": {
+        "name": "Total usage"
+      },
+      "total_usage_hard_water": {
+        "name": "Total usage hard water"
+      },
+      "inbound_water_hardness": {
+        "name": "Inbound water hardness"
+      },
+      "outbound_water_hardness": {
+        "name": "Outbound water hardness"
+      }
+    }
+  }
+}

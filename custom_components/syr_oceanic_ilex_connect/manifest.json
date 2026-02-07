@@ -1,0 +1,14 @@
+{
+  "domain": "syr_oceanic_ilex_connect",
+  "name": "Syr Oceanic i-Lex Connect",
+  "codeowners": [
+    "@timg83"
+  ],
+  "config_flow": true,
+  "version": "1.0.0",
+  "dependencies": [],
+  "documentation": "https://www.home-assistant.io/integrations/syr_oceanic_ilex_connect",
+  "integration_type": "device",
+  "iot_class": "cloud_polling",
+  "requirements": []
+}

@@ -1,0 +1,8 @@
+{
+  "name": "Syr Oceanic i-Lex Connect",
+  "domain": "syr_oceanic_ilex_connect",
+  "documentation": "https://github.com/timg83/hass-syr-oceanic-ilex-connect",
+  "issue_tracker": "https://github.com/timg83/hass-syr-oceanic-ilex-connect/issues",
+  "codeowners": ["@timg83"],
+  "iot_class": "cloud_polling"
+}
