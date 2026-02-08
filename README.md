@@ -126,7 +126,7 @@ If no devices appear after configuration:
 ## 💬 Support
 
 For issues, feature requests, or questions:
-- 🐛 [Open an issue on GitHub](https://github.com/YOUR_USERNAME/YOUR_REPO/issues)
+- 🐛 [Open an issue on GitHub](https://github.com/timg83/hass-syr-oceanic-ilex-connect/issues)
 
 ## 📄 License
 
