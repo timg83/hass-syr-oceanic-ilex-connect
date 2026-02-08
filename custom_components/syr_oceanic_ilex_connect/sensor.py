@@ -161,7 +161,7 @@ class ILexSensor(SensorEntity):
         if self.sensor_def.get("unit"):
             try:
                 return float(value)
-            except ValueError, TypeError:
+            except (ValueError, TypeError):
                 return None
         return value
 
