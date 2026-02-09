@@ -2,9 +2,9 @@
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
-
 from datetime import datetime
+import logging
+from typing import TYPE_CHECKING
 
 from homeassistant.components.sensor import (
     SensorDeviceClass,
@@ -16,11 +16,14 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 from homeassistant.helpers.typing import StateType
+from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 if TYPE_CHECKING:
     from . import ILexConfigEntry
 from .const import DOMAIN, FRENCH_DEGREE_HARDNESS
 from .coordinator import ILexDataUpdateCoordinator
+
+_LOGGER = logging.getLogger(__name__)
 
 SENSOR_MAP = [
     {
@@ -124,16 +127,19 @@ async def async_setup_entry(
     """Set up Syr Oceanic sensors based on a config entry."""
     coordinator: ILexDataUpdateCoordinator = entry.runtime_data
     entities: list[ILexSensor] = []
+    _LOGGER.debug("Setting up sensors for %d device(s)", len(coordinator.data))
     for serial in coordinator.data:
+        _LOGGER.debug("Creating sensors for device %s", serial)
         entities.extend(
             ILexSensor(coordinator, serial, sensor_def) for sensor_def in SENSOR_MAP
         )
         # Add last update sensor
         entities.append(ILexLastUpdateSensor(coordinator, serial))
+    _LOGGER.debug("Adding %d sensor entities", len(entities))
     async_add_entities(entities)
 
 
-class ILexSensor(SensorEntity):
+class ILexSensor(CoordinatorEntity, SensorEntity):
     """Representation of a Syr Oceanic sensor."""
 
     def __init__(
@@ -143,7 +149,7 @@ class ILexSensor(SensorEntity):
         sensor_def: dict[str, str],
     ) -> None:
         """Initialize the sensor."""
-        self.coordinator = coordinator
+        super().__init__(coordinator)
         self.serial = serial
         self.sensor_def = sensor_def
         self._attr_has_entity_name = True
@@ -152,11 +158,22 @@ class ILexSensor(SensorEntity):
         self._attr_native_unit_of_measurement = sensor_def.get("unit")
         self._attr_device_class = sensor_def.get("device_class")
         self._attr_state_class = sensor_def.get("state_class")
+        _LOGGER.debug(
+            "Initialized sensor %s for device %s",
+            sensor_def["translation_key"],
+            serial,
+        )
 
     @property
     def native_value(self) -> StateType:
         """Return the state of the sensor."""
         value = self.coordinator.data[self.serial]["live"].get(self.sensor_def["key"])
+        _LOGGER.debug(
+            "Sensor %s (%s) reading value: %s",
+            self.sensor_def["translation_key"],
+            self.sensor_def["key"],
+            value,
+        )
         if value in (None, ""):
             return None
         # Only convert to float if sensor has a unit (numeric sensor)
@@ -164,6 +181,11 @@ class ILexSensor(SensorEntity):
             try:
                 return float(value)
             except (ValueError, TypeError):
+                _LOGGER.warning(
+                    "Could not convert value %s to float for sensor %s",
+                    value,
+                    self.sensor_def["translation_key"],
+                )
                 return None
         return value
 
@@ -181,7 +203,7 @@ class ILexSensor(SensorEntity):
         )
 
 
-class ILexLastUpdateSensor(SensorEntity):
+class ILexLastUpdateSensor(CoordinatorEntity, SensorEntity):
     """Sensor that shows when data was last updated."""
 
     def __init__(
@@ -190,17 +212,20 @@ class ILexLastUpdateSensor(SensorEntity):
         serial: str,
     ) -> None:
         """Initialize the sensor."""
-        self.coordinator = coordinator
+        super().__init__(coordinator)
         self.serial = serial
         self._attr_has_entity_name = True
         self._attr_translation_key = "last_update"
         self._attr_unique_id = f"{serial}_last_update"
         self._attr_device_class = SensorDeviceClass.TIMESTAMP
+        _LOGGER.debug("Initialized last_update sensor for device %s", serial)
 
     @property
     def native_value(self) -> datetime | None:
         """Return the last update time."""
-        return self.coordinator.last_update_success_time
+        update_time = self.coordinator.last_update_success_time
+        _LOGGER.debug("Last update time: %s", update_time)
+        return update_time
 
     @property
     def device_info(self) -> DeviceInfo:
