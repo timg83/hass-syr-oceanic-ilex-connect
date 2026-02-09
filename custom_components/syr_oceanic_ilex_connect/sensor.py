@@ -14,6 +14,7 @@ from homeassistant.components.sensor import (
 from homeassistant.const import UnitOfPressure, UnitOfTime, UnitOfVolume
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.device_registry import DeviceInfo
+from homeassistant.helpers.entity import EntityCategory
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 from homeassistant.helpers.typing import StateType
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
@@ -218,6 +219,7 @@ class ILexLastUpdateSensor(CoordinatorEntity, SensorEntity):
         self._attr_translation_key = "last_update"
         self._attr_unique_id = f"{serial}_last_update"
         self._attr_device_class = SensorDeviceClass.TIMESTAMP
+        self._attr_entity_category = EntityCategory.DIAGNOSTIC
         _LOGGER.debug("Initialized last_update sensor for device %s", serial)
 
     @property

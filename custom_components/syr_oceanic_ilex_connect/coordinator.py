@@ -7,7 +7,10 @@ from typing import Any
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import ConfigEntryAuthFailed
-from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
+from homeassistant.helpers.update_coordinator import (
+    TimestampDataUpdateCoordinator,
+    UpdateFailed,
+)
 
 from .api import ILexAuthError, ILexClient
 from .const import DEFAULT_SCAN_INTERVAL, DOMAIN
@@ -15,7 +18,9 @@ from .const import DEFAULT_SCAN_INTERVAL, DOMAIN
 _LOGGER = logging.getLogger(__name__)
 
 
-class ILexDataUpdateCoordinator(DataUpdateCoordinator[dict[str, dict[str, Any]]]):
+class ILexDataUpdateCoordinator(
+    TimestampDataUpdateCoordinator[dict[str, dict[str, Any]]]
+):
     """Class to manage fetching Syr Oceanic data."""
 
     def __init__(
@@ -36,7 +41,9 @@ class ILexDataUpdateCoordinator(DataUpdateCoordinator[dict[str, dict[str, Any]]]
         _LOGGER.debug("Starting data update cycle")
         try:
             devices = await self.client.get_devices()
-            _LOGGER.debug("Retrieved %d device(s) from API", len(devices.get("results", [])))
+            _LOGGER.debug(
+                "Retrieved %d device(s) from API", len(devices.get("results", []))
+            )
         except ILexAuthError as err:
             # If re-authentication failed, trigger reauth flow
             if "re-authentication failed" in str(err):
@@ -74,7 +81,12 @@ class ILexDataUpdateCoordinator(DataUpdateCoordinator[dict[str, dict[str, Any]]]
                 )
             except Exception as err:
                 _LOGGER.warning(
-                    "Failed to get live data for device %s: %s", serial, err, exc_info=True
+                    "Failed to get live data for device %s: %s",
+                    serial,
+                    err,
+                    exc_info=True,
                 )
-        _LOGGER.debug("Data update cycle completed. Retrieved data for %d device(s)", len(data))
+        _LOGGER.debug(
+            "Data update cycle completed. Retrieved data for %d device(s)", len(data)
+        )
         return data
