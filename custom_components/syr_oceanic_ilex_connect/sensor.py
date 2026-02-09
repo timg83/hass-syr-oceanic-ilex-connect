@@ -32,14 +32,12 @@ SENSOR_MAP = [
         "translation_key": "current_flow",
         "key": "getFLO",
         "unit": UnitOfVolume.LITERS,
-        "device_class": SensorDeviceClass.WATER,
         "state_class": SensorStateClass.MEASUREMENT,
     },
     {
         "translation_key": "remaining_capacity",
         "key": "getRES",
         "unit": UnitOfVolume.LITERS,
-        "device_class": SensorDeviceClass.WATER,
         "state_class": SensorStateClass.MEASUREMENT,
     },
     {
