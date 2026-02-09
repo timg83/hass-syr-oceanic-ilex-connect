@@ -99,6 +99,9 @@
             },
             "outbound_water_hardness": {
                 "name": "Outbound water hardness"
+            },
+            "last_update": {
+                "name": "Last update"
             }
         }
     }
